@@ -68,3 +68,60 @@ inflearn 스프링 배치
 - SELECT * FROM BATCH_STEP_EXECUTION; -- 실제 실행된 스텝들 저장, BATCH_JOB_EXECUTION과 외래키 관계
 
 --- 
+
+#Job
+- 하나의 배치 작업 자체를 의미, Step들을 포함 하고있는 하나의 컨테이너
+- 반드시 하나 이상의 Step으로 구성해야함
+- SimpleJob: 순차적으로 Step 실행
+- FlowJob: 조건에 따는 Step 실행(건너뛰기 가능)
+- ![img_4.png](img_4.png)
+
+---
+
+#JobInstance: 
+- job의 논리적 실행단위로 고유하게 식별 가능 한 작업 실행을 나타냄
+- 실행할때마다 달라짐
+- 동일한 job instance를 중복 실행할 수 없음
+- 이전과 동일한 job과 job parameter로 실행할 경우 이미존재하는 jon instance를 리턴, 그래서 오류가남
+- ![img_5.png](img_5.png)
+
+---
+
+#JobParameter
+- job을 실행할 때 함께 포함되어 사용되는 파라미터를 가진 도메인 객체
+- 하나의 job에 존재할 수 있는 여러개의 job instance를 구분하기 위한용도
+- STRING, DATE, LONG, DOUBLE 타입 지원
+- JobParameters와 JobInstance는 1:1 관계
+- job excution 테이블과 1:M 관계
+- 이전과 동일한 job과 job parameter로 실행할 경우 이미존재하는 jon instance를 리턴, 그래서 오류가남
+- 어플리케이션 실행 시 주입
+  - java -jar spring-batch-lecture-0.0.1-SNAPSHOT.jar name=user1 seq(long)=2L date(date)=2021/01/01 age(double)=16.5
+- 코드로 생성
+  - JobParameterBuilder, DefaultJobParametersConverter
+- SpEL 이용(SpEL(Sping Expression Language)은 스프링 프레임워크에서 사용할 수 있는 표현식 언어로, 런타임 시에 다양한 객체의 값을 동적으로 가져오거나, 설정을 통해 처리 로직을 정의할 때 사용)
+  - @Value("#{jobParameter[requestDate]}"), @JobScope, @StepScope 선언 필수
+
+[yml에서 자동설정 해제 하는법]
+batch:
+    job:
+      enabled: false
+
+[jar 실행 시]
+java -jar spring-batch-lecture-0.0.1-SNAPSHOT.jar name=user1 seq(long)=2L date(date)=2021/01/01 age(double)=16.5
+
+[intellij 실행 시 ]
+Program Argument에 name=user1 seq(long)=2L date(date)=2021/01/01 age(double)=16.5 넣고  아래 소스 주석,  yml에 자동 배치 실행 한 다음 실행
+
+---
+
+#JobExecution
+- JobInstance에 대한 한번의 시도를 의미하는 객체
+- JobInstance와 JobExecution은 1:M의 관계로 JobInstance에 대한 성공/실패의 내역을 가짐
+- Job실행 중에 발생한 정보들을 저장하고 있는 객체
+  - 시작, 종료, 상태(시작됨, 완료, 실패), 종료상태의 속성을 가짐
+- JobInstance 와의 관계
+  - COMPLETED: JobInstance 실행이 완료된 것으로 간주히여 재실행 불가능
+  - FAILED: JobInstance 실행이 완료되지 않은 것으로 간주하여 재실행 가능
+    - JobParameter가 동일하더라도 재실행 가능
+    - 파라미터가 동일할 경우 동일한 인스턴스를 가지고 재실행함
+
