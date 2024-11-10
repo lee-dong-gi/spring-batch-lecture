@@ -54,7 +54,7 @@
 - Job: 일, 일감
   - Step: 일의 항목, 단계
     - Tasklet: 작업내용, 비즈니스로직
-
+- chunk: 데이터를 일괄 처리할 때 일정한 크기만큼 묶어서(chunk size) 처리하는 방식 chunk 기반 처리에서는 데이터를 청크 단위로 나누어 읽고, 처리하며, 그 결과를 청크 단위로 커밋
 --- 
 
 # SpringBatch의 DB 스키마
@@ -127,3 +127,33 @@ Program Argument에 name=user1 seq(long)=2L date(date)=2021/01/01 age(double)=16
     - 파라미터가 동일할 경우 동일한 인스턴스를 가지고 재실행함
 
 ---
+
+#Step
+- Batch job을 구성하는 독립적인 하나의 단계로서 실제 배치처리를 정의하고 컨트롤하는데 모든 정보를 가지고 있는 도메인 객체
+- 비즈니스로직담당
+- 모든 job은 하나 이상의 step을 구성됨
+- JobStep: step 내에서 job을 실행
+- TaskletStep: 기본
+- FlowStep: flow실행
+- PartitionStep: 멀티스레드방식으로 step을 여러개로 분리 실행
+
+---
+
+#StepExecution
+- Step에 대한 한번의 시도를 의미하는 객체로 Step 실행 중에 발생한 정보들을 저장하고 있는 객체
+- Step이 실행될때마다 생성
+- job이 재시작하더라도 이미 성공적으로 완료된 step은 재실행안되고 실패한 step만 실행
+- 이전단계 step이 실패하면 다음 step은 실행되지 않음. 즉 StepExecution이 생성되지 않음
+- StepExecution이 모두 정상적으로 완료되어야 JobExecution이 정상 완료
+- StepExecution이 하나라도 실패하면 JobExecution은 실패
+- JobExecution과 StepExecution은 1:M 관계
+
+---
+
+#StepContribution
+- 청크 프로세스의 변경사항을 버퍼링 한 후 StepExecution 상태를 업데이트 하는 도메인객체
+- 청크 커밋 직전에 StepExecution의 apply 메서드를 호출하여 상태를 업데이트
+- ExitStatus의 기본 종료코드 외 사용자 정의 종료코드를 생성해서 적용
+
+---
+
