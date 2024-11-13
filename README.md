@@ -157,3 +157,17 @@ Program Argument에 name=user1 seq(long)=2L date(date)=2021/01/01 age(double)=16
 
 ---
 
+#ExecutionContext
+- 프레임워크에서 유지 및 관리하는 키/값으로 된 컬렉션으로 StepExecution 또는 JobExcution 객체의 상태를 저장하는 공유객체
+- DB에 직렬화 한 값으로 저장됨 {key:value}
+- Step 범위: 각 Step의 StepContribution에 저장되며 step간 공유 안됨
+- Job 범위: 각 Job의 JobExecution에 저장디면 job간 서로 공유 안되며 job의 스텝간 공유됨
+- job 재 시작시 이미 처리한 row 데이터는 건너 뛰고 이후로 수행하도록 할 때 상태정보를 활용한다.
+
+---
+
+#JobRepository
+- DB 관련작업(트렌잭션)을 대신 맡아줌
+- 기본값으로 가장 엄격한 ISOLATION 급으로 설정
+- JobExecutionListener를 구현하여 Job이 시작하기 전과 후에 추가 작업 할 수 있음
+- BasicBatchConfigurer을 상속받아 커스텀 설정이 가능함
