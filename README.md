@@ -171,3 +171,10 @@ Program Argument에 name=user1 seq(long)=2L date(date)=2021/01/01 age(double)=16
 - 기본값으로 가장 엄격한 ISOLATION 급으로 설정
 - JobExecutionListener를 구현하여 Job이 시작하기 전과 후에 추가 작업 할 수 있음
 - BasicBatchConfigurer을 상속받아 커스텀 설정이 가능함
+
+---
+
+#JobLauncher
+- JobLauncherApplicationRunner가 자동적으로 JobLauncher를 실행시킨다.
+- 동기적실행: 스케줄링 또는 긴 배치에 적함
+- 비동기적실행: HTTP 요청에의한 배치처리에 적합
