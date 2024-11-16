@@ -178,3 +178,27 @@ Program Argument에 name=user1 seq(long)=2L date(date)=2021/01/01 age(double)=16
 - JobLauncherApplicationRunner가 자동적으로 JobLauncher를 실행시킨다.
 - 동기적실행: 스케줄링 또는 긴 배치에 적함
 - 비동기적실행: HTTP 요청에의한 배치처리에 적합
+
+--- 
+
+#배치초기화 설정
+- JobLauncherApplicationRunner
+  - Spring Batch 작업을 시작하는 Application 리스너로서 BatchAutoConfiguration에서 생성됨
+  - 스프링부터에서 제공하는 Application Runner의 구현체로 어플리케이션이 정상적으로 구동될때 마다 실행됨
+  - 기본적으로 빈으로 등록된 모든 job을 실행시킨다.
+- BatchProperties
+  - spring batch의 환경 설정 클래스
+
+```
+spring:
+  batch:
+    job:
+      #names: batchJob1,batchJob2 # 설정된 이름의 job만을 실행(,구분하여 여러개 가능)
+      names: ${job.name:NONE} # Program Arguments 에서 --job.name=batchJob1,batchJob2
+      enabled: true # 시스템 시작 시 자동 실행여부
+      #enabled: false
+    jdbc:
+      initialize-schema: always # 시스템 시작 시 스키마 초기화 여부
+      #initialize-schema: never
+      #table-prefix: SYSTEM_ # 테이블 접미사, 기본은 BATCH_
+```

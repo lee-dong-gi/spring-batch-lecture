@@ -18,7 +18,7 @@ spring:
       driver-class-name: org.h2.Driver
   batch:
     jdbc:
-      initialize-schema: embedded # ?? ???? ???? ?? ??? ?? ?? ??? ???? ???
+      initialize-schema: embedded
 ---
 spring:
   config:
@@ -32,7 +32,11 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
   batch:
     job:
-      enabled: false
+      #names: batchJob1,batchJob2 # 설정된 이름의 job만을 실행(,구분하여 여러개 가능)
+      names: ${job.name:NONE} # Program Arguments 에서 --job.name=batchJob1,batchJob2
+      enabled: true # 시스템 시작 시 자동 실행여부
+      #enabled: false
     jdbc:
-      initialize-schema: always
+      initialize-schema: always # 시스템 시작 시 스키마 초기화 여부
       #initialize-schema: never
+      #table-prefix: SYSTEM_ # 테이블 접미사, 기본은 BATCH_
