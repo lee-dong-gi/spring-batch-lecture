@@ -202,3 +202,16 @@ spring:
       #initialize-schema: never
       #table-prefix: SYSTEM_ # 테이블 접미사, 기본은 BATCH_
 ```
+
+---
+
+#JobBuilderFactory / JobBuilder
+- JobBuilderFactory JobBuilder를 생성하는 팩토리 클래스로서 get(String name) 메서드 제공
+- JobBuilder: 
+  - SimpleJobBuilder: Job실행과 관련된 여러 설정 API를 제공한다.
+  - FlowJobBuilder: 내부적으로 FlowBuilder를 반환함으로써 Flow 실행과 관련된 여러 설정 API를 제공한다.
+    - Flow: 조건부 분기나 순차 실행 등을 정의하는 데 유용
+
+![img_6.png](img_6.png)
+
+---
