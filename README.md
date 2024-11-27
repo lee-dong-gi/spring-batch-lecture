@@ -215,3 +215,13 @@ spring:
 ![img_6.png](img_6.png)
 
 ---
+
+# SimpleJob batch api들
+- .get(“batchJob"): JobBuilder 를 생성하는 팩토리, Job 의 이름을 매개변수로 받음
+- .start: 처음 실행 할 Step 설정, 최초 한번 설정, 이 메서드를 실행하면 SimpleJobBuilder 반환
+- .next(Step): 다음에 실행 할 Step 설정, 횟수는 제한이 없으며 모든 next() 의 Step 이 종료가 되면 Job 이 종료된다
+- .incrementer(JobParametersIncrementer): JobParameter 의 값을 자동을 증가해 주는 JobParametersIncrementer 설정
+- .preventRestart(true):  Job 의 재 시작 가능 여부 설정, 기본값은 true
+- .validator(JobParameterValidator): JobParameter 를 실행하기 전에 올바른 구성이 되었는지 검증하는 JobParametersValidator 설정
+- .listener(JobExecutionListener): Job 라이프 사이클의 특정 시점에 콜백 제공받도록 JobExecutionListener 설정
+- .build(): SimpleJob 생성
