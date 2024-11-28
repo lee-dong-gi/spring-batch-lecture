@@ -225,3 +225,9 @@ spring:
 - .validator(JobParameterValidator): JobParameter 를 실행하기 전에 올바른 구성이 되었는지 검증하는 JobParametersValidator 설정
 - .listener(JobExecutionListener): Job 라이프 사이클의 특정 시점에 콜백 제공받도록 JobExecutionListener 설정
 - .build(): SimpleJob 생성
+
+---
+
+# validator()
+- job 실행에 필요한 파라미터를 검증하는 용도
+- DefaultJobParameterValidator: 필수 키의 값이 존재하는지만 확인
