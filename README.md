@@ -231,3 +231,18 @@ spring:
 # validator()
 - job 실행에 필요한 파라미터를 검증하는 용도
 - DefaultJobParameterValidator: 필수 키의 값이 존재하는지만 확인
+
+---
+
+# preventRestart
+- 해당 옵션을 false로 설정 시 job이 실패해도 재시작 안되게 설정
+- false일 때 재시작하게되면 JobRestartException 발생
+- job을 처음 실행할때는 아무런 영향 x
+- 해당 오퍼레이터 선언 시 기본값은 false
+
+---
+
+# incrementer
+- JobParameters에 필요한 값을 증가시켜 다음에 사용될 JobParameter 오브젝트를 리턴
+- 기존의 JobParameter 변경 없이 Job을 여러번 시작하고자 할때
+- RunIdIncrementer 구현체를 지원하며 인터페이스를 직접 구현할 수 있음

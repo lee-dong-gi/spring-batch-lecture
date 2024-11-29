@@ -1,4 +1,4 @@
-//package io.springbatch.springbatchlecture.validator;
+//package io.springbatch.springbatchlecture.prevent;
 //
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
@@ -17,18 +17,23 @@
 //@Slf4j
 //@Configuration
 //@RequiredArgsConstructor
-//public class JobParameterValidatorConfiguration {
+//public class JobPreventRestartConfiguration {
 //
 //    private final JobBuilderFactory jobBuilderFactory;
 //    private final StepBuilderFactory stepBuilderFactory;
 //
+//    /**
+//     * SimpleJobLauncher의 아래 구문 참조
+//     *
+//     * if (!job.isRestartable()) {
+//     *
+//     */
 //    @Bean
 //    public Job batchJob() { // 자동으로 simple job 사용
 //        return jobBuilderFactory.get("batchJob")
 //                .start(step1())
 //                .next(step2())
-////                .validator(new CustomJobParameterValidator())
-//                .validator(new DefaultJobParametersValidator(new String[]{"name","date"}, new String[]{"count"}))
+//                .preventRestart() // 아무런 값을 넣지 않으면 기본값 false, 두번째 실행 시 JobInstance already exists and is not restartable 에러 발생
 //                .build();
 //    }
 //
@@ -50,7 +55,8 @@
 //        return stepBuilderFactory.get("step2")
 //                .tasklet((contribution, chunkContext) -> {
 //                    System.out.println(">> step2 executed");
-//                    return RepeatStatus.FINISHED; // 한번만 실행되고 종료함
+//                    throw new RuntimeException("step2 was failed");
+////                    return RepeatStatus.FINISHED; // 한번만 실행되고 종료함
 //                })
 //                .build();
 //    }
