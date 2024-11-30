@@ -10,6 +10,7 @@
 
 ---
 
+
 # 배치 시나리오
 - 배치 프로세스를 주기적으로 커밋
 - 동시 다발적인 Job의 배치처리, 대용량 병렬처리, 서로 간섭이 없어야함
@@ -246,3 +247,10 @@ spring:
 - JobParameters에 필요한 값을 증가시켜 다음에 사용될 JobParameter 오브젝트를 리턴
 - 기존의 JobParameter 변경 없이 Job을 여러번 시작하고자 할때
 - RunIdIncrementer 구현체를 지원하며 인터페이스를 직접 구현할 수 있음
+
+---
+
+# SimpleJob 아키텍처
+
+![img_7.png](img_7.png)
+
