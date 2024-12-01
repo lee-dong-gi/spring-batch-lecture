@@ -249,6 +249,13 @@ spring:
 
 ---
 
+# SimpleJob 아키텍처
+
+![img_7.png](img_7.png)
+
+
+---
+
 # TaskletStep
 - 스프링 배치에서 제공하는 Step의 구현체로 Tasklet을 실행시키는 도메인 객체
 - RepeatTemplate를 사용해 Tasklet의 구문을 트랜잭션 경계 내에서 반복실행
