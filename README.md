@@ -246,3 +246,35 @@ spring:
 - JobParameters에 필요한 값을 증가시켜 다음에 사용될 JobParameter 오브젝트를 리턴
 - 기존의 JobParameter 변경 없이 Job을 여러번 시작하고자 할때
 - RunIdIncrementer 구현체를 지원하며 인터페이스를 직접 구현할 수 있음
+
+---
+
+# TaskletStep
+- 스프링 배치에서 제공하는 Step의 구현체로 Tasklet을 실행시키는 도메인 객체
+- RepeatTemplate를 사용해 Tasklet의 구문을 트랜잭션 경계 내에서 반복실행
+- Task기반과 Chunk 기반으로 나누어져 Tasklet을 실행함
+  - Chunk 기반
+    - 청크 단위로 트랜잭션이 관리
+    - 하나의 큰 덩어리를 n개씩 나워서 실행한다는 의미로 대량 처리에 효과적
+    - ItemReaderm, ItemProcesseor, ItemWriter를 사용하여 청크 기반 전용 Tasklet인 ChunkOrientedTasklet 구현체를 제공
+    - 데이터를 한 번에 모두 읽어오지 않고, 설정된 청크 크기(예: 10개)만큼 읽어 처리하고 쓰기를 반복합니다. 
+    - 메모리에 항상 필요한 데이터만 로드하므로 대량 데이터를 처리할 때 메모리 부담이 적습니다.
+  - Task 기반
+    - 모든 작업이 하나의 큰 트랜잭션으로 처리
+    - 단일 작업 기반으로 처리되는 것이 더 효율적인 경우
+    - 주로 Tasklet 구현체를 만들어 사용
+    - 대량처리를 하는경우 chunk 기반보다 복잡
+    - 태스크 기반은 전체 데이터를 한 번에 테이블에 올려 처리하려다 넘칠 가능성이 큼.
+  - ![img_7.png](img_7.png)
+  - ![img_8.png](img_8.png)
+
+```
+public Step batchStep() {
+return stepBuilderFactory.get(“batchStep") // StepBuilder 를 생성하는 팩토리, Step 의 이름을 매개변수로 받음
+  .tasklet(Tasklet) // Tasklet 클래스 설정, 이 메서드를 실행하면 TaskletStepBuilder 반환
+  .startLimit(10) // Step의 실행 횟수를 설정, 설정한 만큼 실행되고 초과시 오류 발생, 기본값음 INTEGER.MAX_VALUE
+  .allowStartIfComplete(true) // Step의 성공, 실패와 상관없이 항상 Step 을 실행하기 위한 설정
+  .listener(StepExecutionListener) // Step 라이프 사이클의 특정 시점에 콜백 제공받도록 StepExecutionListener 설정
+  .build(); // TaskletStep 을 생성
+}
+```
