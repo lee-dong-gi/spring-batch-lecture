@@ -1,6 +1,8 @@
 # spring-batch-lecture
 [inflearn 스프링 배치](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B0%B0%EC%B9%98/dashboard)
 
+
+--job.name=batchJob date=20241127 name=dk
 ---
 
 # 배치 핵심 패턴(ETL)
@@ -285,3 +287,18 @@ return stepBuilderFactory.get(“batchStep") // StepBuilder 를 생성하는 팩
   .build(); // TaskletStep 을 생성
 }
 ```
+
+---
+
+# startLimit
+ - step의 실행횟수 조정
+ - step마다 설정
+ - 설정 값을 초과해서 실행하면 StartLimitExceededException이 발생
+ - 기본값은 Integer.MAX_VALUE
+ - ![img_10.png](img_10.png)
+
+# allowStartIfConplete
+ - 재시작이 가능한 잡에서 이전 스텝의 이전 성공여부와 상관 없이 항상 스텝을 실행하기 위한 설정
+ - 실행마다 유효성을 검증하는 스텝이나 사전 작업이 꼭 필요한 스텝
+ - 기본적으로 COMPLETED상태를 가진 스텝은 잡 재시작 시 실행하지 않고 스킵
+ - allow-start-if-complete가 'true'로 설정된 step은 항상 실행한다.
